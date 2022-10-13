@@ -9,6 +9,16 @@ use rocket_contrib::serve::StaticFiles;
 
 const TITLE: &'static str = "Webrite";
 
+fn footer(sitename: &'static str, link: &'static str) -> Markup {
+  html! {
+    footer {
+      "Copyright (C) "
+      a href=(link) { (sitename) };
+      " All Right Reserved."
+    }
+  }
+}
+
 fn layout(body: Markup) -> Markup {
   html! {
     (DOCTYPE)
@@ -22,6 +32,7 @@ fn layout(body: Markup) -> Markup {
       body {
         main {
           (body)
+          (footer(TITLE, "/"))
         }
       }
     }
