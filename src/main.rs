@@ -5,6 +5,7 @@
 #[macro_use] extern crate rocket_contrib;
 
 use maud::{DOCTYPE, Markup, html};
+use rocket_contrib::serve::StaticFiles;
 
 const TITLE: &'static str = "Webrite";
 
@@ -38,5 +39,6 @@ fn index() -> Markup {
 fn main() {
   rocket::ignite()
     .mount("/", routes![index])
+    .mount("/static", StaticFiles::from("./static"))
     .launch();
 }
