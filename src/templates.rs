@@ -1,20 +1,13 @@
-#![feature(decl_macro)]
-
-#[macro_use] extern crate rocket;
-#[macro_use] extern crate rocket_codegen;
-#[macro_use] extern crate rocket_contrib;
-
 use maud::{DOCTYPE, Markup, html, Render};
-use rocket_contrib::serve::StaticFiles;
 
 const TITLE: &'static str = "Webrite";
 
 fn footer(sitename: &'static str, link: &'static str) -> Markup {
   html! {
-    footer {
-      "Copyright (C) "
-      a href=(link) { (sitename) };
-      " All Right Reserved."
+    footer .footer.sticky."bottom-0"."p-12"."bg-base-200".text-base-content {
+      ."flow-1" {
+        p .flow-row.justify-center { "Copyright (C) " a href=(link) { (sitename) } " All Right Reserved." }
+      }
     }
   }
 }
@@ -22,17 +15,20 @@ fn footer(sitename: &'static str, link: &'static str) -> Markup {
 struct Drawer {
   content: Markup,
   side: Markup,
+  footer: Markup,
 }
 
 impl Render for Drawer {
   fn render(&self) -> Markup {
-    let Self {content, side} = self;
+    let Self {content, side, footer} = self;
     html! {
       .drawer {
         input #menu-button .drawer-toggle type="checkbox";
         .drawer-content {
           (content)
         }
+        { (footer) }
+        // TODO(#): implement y-full
         .drawer-side {
           label for="menu-button" .drawer-overlay;
           (side)
@@ -42,7 +38,7 @@ impl Render for Drawer {
   }
 }
 
-fn layout(body: Markup) -> Markup {
+pub fn layout(body: Markup) -> Markup {
   html! {
     (DOCTYPE)
     html {
@@ -58,16 +54,18 @@ fn layout(body: Markup) -> Markup {
             content: html! {
               .flex.flex-col {
                 .w-full.navbar."bg-base-300" {
-                  label for="menu-button" .btn.btn-primary.drawer-button {
-                    "Open Drawer"
+                  label for="menu-button" .btn.btn-square.btn-ghost {
+                    svg .inline-block."w-6"."h-6".stroke-current xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" {
+                      path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6M16M4 12h16M4 18h16" {}
+                    }
                   }
                 }
                 (body);
-                (footer(TITLE, "/"));
               }
             },
+            footer: (footer(TITLE, "/")),
             side: html! {
-              ul .menu."p-4".overflow-y-auto."w-80"."bg-base-100" {
+              ul .menu."p-4".overflow-y-auto.h-full."w-80"."bg-base-100" {
                 li { a href="/" { "Home" }}
                 li { a href="/about" { "About" }}
                 li { a href="/contact" { "Contact" }}
@@ -80,19 +78,4 @@ fn layout(body: Markup) -> Markup {
       }
     }
   }
-}
-
-
-#[get("/")]
-fn index() -> Markup {
-  layout(html! {
-    h1 { "ok" }
-  })
-}
-
-fn main() {
-  rocket::ignite()
-    .mount("/", routes![index])
-    .mount("/static", StaticFiles::from("./static"))
-    .launch();
 }
