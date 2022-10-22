@@ -2,6 +2,10 @@ use webrite::*;
 
 use std::{fs, path::Path};
 
+use maud::Markup;
+
+struct Target(fn() -> Markup, &'static str);
+
 fn main() {
   let root_dir = Path::new("./static/html/");
   if root_dir.exists() {
@@ -9,8 +13,15 @@ fn main() {
   }
   fs::create_dir(root_dir).unwrap();
 
-  let output_path = root_dir.join(Path::new("index.html"));
+  let targets = vec![
+    Target(index, "index"),
+    Target(contact, "contact")
+  ];
 
-  let contents = index().into_string();
-  fs::write(output_path, contents).unwrap();
+  for Target(ep, filename) in targets {
+    fs::write(
+      root_dir.join(Path::new(format!("{}.html", filename).as_str())),
+      ep().into_string()
+    ).unwrap();
+  }
 }

@@ -6,7 +6,7 @@ use webrite::*;
 
 fn main() {
   rocket::ignite()
-    .mount("/", routes![index])
+    .mount("/", routes![index, contact])
     .mount("/static", StaticFiles::from("./static"))
     .launch();
 }

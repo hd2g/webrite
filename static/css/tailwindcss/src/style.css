@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-a {
+.footer a {
   color: blue;
   text-decoration: underline;
   text-decoration-color: blue;

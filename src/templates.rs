@@ -59,6 +59,9 @@ pub fn layout(body: Markup) -> Markup {
                       path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6M16M4 12h16M4 18h16" {}
                     }
                   }
+                  h1 ."text-4xl" {
+                    a href="/" { (TITLE) }
+                  }
                 }
                 (body);
               }
@@ -66,11 +69,11 @@ pub fn layout(body: Markup) -> Markup {
             footer: (footer(TITLE, "/")),
             side: html! {
               ul .menu."p-4".overflow-y-auto.h-full."w-80"."bg-base-100" {
-                li { a href="/" { "Home" }}
-                li { a href="/about" { "About" }}
-                li { a href="/contact" { "Contact" }}
-                li { a href="/rss" { "Rss" }}
-                li { a href="/github" { "GitHub" }}
+                li { a href="/" { "Home" } }
+                li { a href="/news" { "News" } }
+                li { a href="/contact" { "Contact" } }
+                li { a href="/rss" { "Rss" } }
+                li { a href="/github" { "GitHub" } }
               }
             },
           })
